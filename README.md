@@ -108,3 +108,24 @@ python3 scripts/import_bitflyer_csv.py
 python3 scripts/import_hokuriku_bank_csv.py
 python3 scripts/build_analysis_transactions.py
 ```
+
+## 家計レポート生成
+
+月次支出入（表・グラフ）、主要支出ドライバー、特別支出分類をMarkdownで出力します。
+
+```bash
+python3 scripts/generate_household_report.py --year 2025
+```
+
+出力先:
+- `reports/2025_household_cashflow.md`
+
+主なオプション:
+
+```bash
+# 出力先を指定
+python3 scripts/generate_household_report.py --year 2025 --output reports/custom_2025.md
+
+# 入力CSVを指定
+python3 scripts/generate_household_report.py --year 2025 --input data/analysis/all_transactions.csv
+```

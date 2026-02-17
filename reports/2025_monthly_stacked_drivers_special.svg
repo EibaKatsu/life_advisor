@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+<rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+<text x="600.0" y="42" text-anchor="middle" font-size="26" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#1f2937">2025年 月次支出（主要ドライバー + 特別支出）</text>
+<line x1="90" y1="500.00" x2="1160" y2="500.00" stroke="#e5e7eb" stroke-width="1"/>
+<text x="78" y="505.00" text-anchor="end" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#6b7280">0</text>
+<line x1="90" y1="418.00" x2="1160" y2="418.00" stroke="#e5e7eb" stroke-width="1"/>
+<text x="78" y="423.00" text-anchor="end" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#6b7280">540,000</text>
+<line x1="90" y1="336.00" x2="1160" y2="336.00" stroke="#e5e7eb" stroke-width="1"/>
+<text x="78" y="341.00" text-anchor="end" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#6b7280">1,080,000</text>
+<line x1="90" y1="254.00" x2="1160" y2="254.00" stroke="#e5e7eb" stroke-width="1"/>
+<text x="78" y="259.00" text-anchor="end" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#6b7280">1,620,000</text>
+<line x1="90" y1="172.00" x2="1160" y2="172.00" stroke="#e5e7eb" stroke-width="1"/>
+<text x="78" y="177.00" text-anchor="end" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#6b7280">2,160,000</text>
+<line x1="90" y1="90.00" x2="1160" y2="90.00" stroke="#e5e7eb" stroke-width="1"/>
+<text x="78" y="95.00" text-anchor="end" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#6b7280">2,700,000</text>
+<line x1="90" y1="90" x2="90" y2="500" stroke="#9ca3af" stroke-width="1.4"/>
+<line x1="90" y1="500" x2="1160" y2="500" stroke="#9ca3af" stroke-width="1.4"/>
+<rect x="106.94" y="450.32" width="55.28" height="49.68" fill="#4e79a7"/>
+<text x="134.58" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">01</text>
+<text x="134.58" y="444.32" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">327,134</text>
+<rect x="196.11" y="434.38" width="55.28" height="65.62" fill="#4e79a7"/>
+<rect x="196.11" y="397.75" width="55.28" height="36.63" fill="#f28e2b"/>
+<text x="223.75" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">02</text>
+<text x="223.75" y="391.75" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">673,349</text>
+<rect x="285.28" y="422.52" width="55.28" height="77.48" fill="#4e79a7"/>
+<rect x="285.28" y="97.93" width="55.28" height="324.60" fill="#f28e2b"/>
+<text x="312.92" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">03</text>
+<text x="312.92" y="100.00" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">2,647,805</text>
+<rect x="374.44" y="423.89" width="55.28" height="76.11" fill="#4e79a7"/>
+<rect x="374.44" y="348.80" width="55.28" height="75.09" fill="#f28e2b"/>
+<text x="402.08" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">04</text>
+<text x="402.08" y="342.80" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">995,723</text>
+<rect x="463.61" y="447.91" width="55.28" height="52.09" fill="#4e79a7"/>
+<text x="491.25" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">05</text>
+<text x="491.25" y="441.91" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">343,014</text>
+<rect x="552.78" y="466.42" width="55.28" height="33.58" fill="#4e79a7"/>
+<text x="580.42" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">06</text>
+<text x="580.42" y="460.42" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">221,109</text>
+<rect x="641.94" y="455.26" width="55.28" height="44.74" fill="#4e79a7"/>
+<text x="669.58" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">07</text>
+<text x="669.58" y="449.26" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">294,620</text>
+<rect x="731.11" y="465.06" width="55.28" height="34.94" fill="#4e79a7"/>
+<rect x="731.11" y="444.94" width="55.28" height="20.12" fill="#f28e2b"/>
+<text x="758.75" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">08</text>
+<text x="758.75" y="438.94" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">362,594</text>
+<rect x="820.28" y="455.54" width="55.28" height="44.46" fill="#4e79a7"/>
+<rect x="820.28" y="443.69" width="55.28" height="11.84" fill="#f28e2b"/>
+<text x="847.92" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">09</text>
+<text x="847.92" y="437.69" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">370,803</text>
+<rect x="909.44" y="448.51" width="55.28" height="51.49" fill="#4e79a7"/>
+<rect x="909.44" y="407.82" width="55.28" height="40.68" fill="#f28e2b"/>
+<text x="937.08" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">10</text>
+<text x="937.08" y="401.82" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">607,013</text>
+<rect x="998.61" y="444.14" width="55.28" height="55.86" fill="#4e79a7"/>
+<text x="1026.25" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">11</text>
+<text x="1026.25" y="438.14" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">367,890</text>
+<rect x="1087.78" y="452.98" width="55.28" height="47.02" fill="#4e79a7"/>
+<rect x="1087.78" y="422.48" width="55.28" height="30.50" fill="#f28e2b"/>
+<text x="1115.42" y="524" text-anchor="middle" font-size="12" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">12</text>
+<text x="1115.42" y="416.48" text-anchor="middle" font-size="11" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#111827">510,501</text>
+<text x="625.0" y="592" text-anchor="middle" font-size="13" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#4b5563">月</text>
+<text x="22" y="295.0" text-anchor="middle" font-size="13" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#4b5563" transform="rotate(-90 22 295.0)">支出（円）</text>
+<rect x="840" y="60" width="18" height="18" fill="#4e79a7"/>
+<text x="866" y="74" font-size="13" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">主要ドライバー</text>
+<rect x="1010" y="60" width="18" height="18" fill="#f28e2b"/>
+<text x="1036" y="74" font-size="13" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif" fill="#374151">特別支出</text>
+</svg>
