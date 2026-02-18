@@ -57,6 +57,57 @@ DRIVER_RULES: list[tuple[str, list[str]]] = [
     ("税金・公金", [r"コテイシサン", r"ペイジエント", r"テスウリヨウ"]),
 ]
 
+PERSONAL_STOP_CLASS_RULES: list[tuple[str, list[str], str]] = [
+    (
+        "サブスク",
+        [
+            r"NETFLIX",
+            r"SPOTIFY",
+            r"YOUTUBE",
+            r"APPLE",
+            r"GOOGLE",
+            r"VOICY",
+            r"まぐまぐ",
+            r"AMAZON.?PRIME",
+            r"プライム会費",
+            r"メルスプラン",
+            r"FAMILY CLUB",
+        ],
+        "解約または下位プランへの変更を検討",
+    ),
+    (
+        "交際費",
+        [
+            r"寿司",
+            r"スシ",
+            r"居酒屋",
+            r"BAR",
+            r"立飲",
+            r"タチノミ",
+            r"カイカゲツノギザカ",
+            r"マクドナルド",
+            r"ファーストキャビン",
+        ],
+        "月次回数上限を設定し、不要分を停止",
+    ),
+    (
+        "移動費",
+        [
+            r"えきねっと",
+            r"タイムズ",
+            r"パーキング",
+            r"タクシー",
+            r"GO",
+            r"地下鉄",
+            r"オートチャージ",
+            r"ENEOS",
+            r"ETC",
+            r"JCBデビット",
+        ],
+        "移動手段の見直しと回数削減を実施",
+    ),
+]
+
 SPECIAL_RULES: list[tuple[str, list[str]]] = [
     ("住宅・不動産関連", [r"ニツシンカンザイ", r"エイブル", r"タウンハウジング"]),
     ("保険", [r"SMBC\(プルデン", r"アイオイ"]),
@@ -67,7 +118,20 @@ SPECIAL_RULES: list[tuple[str, list[str]]] = [
     ("要確認(摘要空欄)", [r"^$"]),
 ]
 
-BANK_EXCLUDE_PATTERNS = [r"APアプラス", r"ラクテンカ-ド", r"オリコ", r"エイバヤシ カヨコ", r"エイバヤシ カツロウ"]
+BANK_EXCLUDE_PATTERNS = [
+    r"AP.?アプラス",
+    r"ラクテンカ.?ド",
+    r"オリコ",
+    r"エイバヤシカヨコ|エイハヤシカヨコ",
+    r"エイバヤシカツロウ|エイハヤシカツロウ",
+    r"[トド]コモDカ.?ト",
+    r"Dカ.?トDCMX",
+    r"ビュ.?ーカ.?ト|ビユ.?ーカ.?ト|ヒユ-カ.?ト",
+    r"振込",
+    r"普通預金",
+    r"管理番号",
+    r"依頼人名",
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -94,6 +158,15 @@ def normalize_text(value: str) -> str:
     return text
 
 
+def normalize_match_key(value: str) -> str:
+    text = unicodedata.normalize("NFKC", value or "")
+    text = unicodedata.normalize("NFKD", text)
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
+    text = text.upper()
+    text = "".join(text.split())
+    return text
+
+
 def to_int(value: str) -> int:
     try:
         return int((value or "").strip())
@@ -103,6 +176,11 @@ def to_int(value: str) -> int:
 
 def format_yen(value: int) -> str:
     return f"{value:,}"
+
+
+def md_cell(value: str) -> str:
+    text = (value or "").replace("|", "\\|").replace("\n", " ").strip()
+    return text
 
 
 def classify(name: str, rules: list[tuple[str, list[str]]], fallback: str) -> str:
@@ -135,7 +213,7 @@ def load_rows(csv_path: Path, year: int) -> list[dict[str, str]]:
 def build_bank_monthly(rows: list[dict[str, str]], year: int) -> dict[str, dict[str, int]]:
     months = {f"{year}-{m:02d}": {"in": 0, "out": 0} for m in range(1, 13)}
     for row in rows:
-        if row.get("source_name") != "hokurikuBank":
+        if row.get("source_type") != "bank":
             continue
         ym = (row.get("date") or "")[:7]
         amount = to_int(row.get("amount_jpy", "0"))
@@ -152,18 +230,20 @@ def build_spending_records(rows: list[dict[str, str]]) -> list[SpendRecord]:
     records: list[SpendRecord] = []
     for row in rows:
         source = row.get("source_name", "")
+        source_type = row.get("source_type", "")
         amount = to_int(row.get("amount_jpy", "0"))
         if amount <= 0:
             continue
 
         merchant = normalize_text(row.get("merchant", ""))
         day = row.get("date", "")
-        if source in ("rakutenCard", "bitflyerCard"):
+        if source_type == "credit_card":
             records.append(SpendRecord(day=day, source="card", merchant=merchant, amount=amount))
             continue
 
-        if source == "hokurikuBank":
-            if any(re.search(pattern, merchant) for pattern in BANK_EXCLUDE_PATTERNS):
+        if source_type == "bank":
+            match_key = normalize_match_key(merchant)
+            if any(re.search(pattern, match_key) for pattern in BANK_EXCLUDE_PATTERNS):
                 continue
             records.append(SpendRecord(day=day, source="bank", merchant=merchant, amount=amount))
     return records
@@ -453,10 +533,57 @@ def pattern_metrics(records: list[SpendRecord], pattern: str) -> tuple[int, int,
     return total, count, len(months)
 
 
+def build_personal_stop_candidates(
+    spend_records: list[SpendRecord],
+) -> list[dict[str, str | int]]:
+    merchant_stats: dict[str, dict[str, int | set[str]]] = defaultdict(
+        lambda: {"amount": 0, "count": 0, "months": set()}
+    )
+    for record in spend_records:
+        stats = merchant_stats[record.merchant]
+        stats["amount"] = int(stats["amount"]) + record.amount
+        stats["count"] = int(stats["count"]) + 1
+        months = stats["months"]
+        if isinstance(months, set):
+            months.add(record.day[:7])
+
+    candidates: list[dict[str, str | int]] = []
+    for merchant, stats in merchant_stats.items():
+        amount = int(stats["amount"])
+        count = int(stats["count"])
+        months = stats["months"] if isinstance(stats["months"], set) else set()
+        month_count = len(months)
+        if amount <= 0:
+            continue
+
+        for category, patterns, action in PERSONAL_STOP_CLASS_RULES:
+            if not any(re.search(pattern, merchant) for pattern in patterns):
+                continue
+            # 個人向け: 小額ノイズを除き、実際に削減対象になるものを表示
+            threshold = 3_000 if category == "サブスク" else 10_000
+            if amount < threshold:
+                continue
+            candidates.append(
+                {
+                    "category": category,
+                    "merchant": merchant,
+                    "amount": amount,
+                    "count": count,
+                    "months": month_count,
+                    "action": action,
+                }
+            )
+            break
+
+    candidates.sort(key=lambda x: int(x["amount"]), reverse=True)
+    return candidates[:12]
+
+
 def render_improvement_actions(
     spend_records: list[SpendRecord],
     driver_totals: dict[str, int],
     special_records: list[SpendRecord],
+    source_names: set[str],
 ) -> list[str]:
     ec_large = driver_totals.get("EC・大型買物", 0)
     grocery = driver_totals.get("食費・日用品", 0)
@@ -466,6 +593,7 @@ def render_improvement_actions(
     special_total = sum(record.amount for record in special_records)
     special_monthly = special_total // 12 if special_total else 0
 
+    is_personal = bool(source_names & {"dCard", "viewCard", "jreBank", "shinseiBank"})
     stop_candidates = [
         ("リユクストレーニング", r"リユクストレ-ニング", "利用頻度が低い場合は停止"),
         ("メルスプラン", r"メルスプラン", "代替手段があれば停止"),
@@ -482,16 +610,33 @@ def render_improvement_actions(
 
     lines: list[str] = []
     lines.append("### 1) やめる候補（停止で効果が出るもの）")
-    lines.append("| 候補 | 年間金額(円) | 発生回数 | 発生月数 | 推奨アクション |")
-    lines.append("|---|---:|---:|---:|---|")
     stop_total = 0
-    for label, pattern, action in stop_candidates:
-        amount, count, months = pattern_metrics(spend_records, pattern)
-        if amount == 0:
-            continue
-        stop_total += amount
-        lines.append(f"| {label} | {format_yen(amount)} | {count} | {months} | {action} |")
-    lines.append(f"| 合計 | {format_yen(stop_total)} |  |  |  |")
+    if is_personal:
+        lines.append("- 分類ルール: `サブスク / 交際費 / 移動費`")
+        lines.append("")
+        lines.append("| 分類 | 候補 | 年間金額(円) | 発生回数 | 発生月数 | 推奨アクション |")
+        lines.append("|---|---|---:|---:|---:|---|")
+        for row in build_personal_stop_candidates(spend_records):
+            amount = int(row["amount"])
+            stop_total += amount
+            lines.append(
+                f"| {md_cell(str(row['category']))} | {md_cell(str(row['merchant']))} | {format_yen(amount)} | "
+                f"{row['count']} | {row['months']} | {md_cell(str(row['action']))} |"
+            )
+        lines.append(f"| 合計 |  | {format_yen(stop_total)} |  |  |  |")
+    else:
+        lines.append("")
+        lines.append("| 候補 | 年間金額(円) | 発生回数 | 発生月数 | 推奨アクション |")
+        lines.append("|---|---:|---:|---:|---|")
+        for label, pattern, action in stop_candidates:
+            amount, count, months = pattern_metrics(spend_records, pattern)
+            if amount == 0:
+                continue
+            stop_total += amount
+            lines.append(
+                f"| {md_cell(label)} | {format_yen(amount)} | {count} | {months} | {md_cell(action)} |"
+            )
+        lines.append(f"| 合計 | {format_yen(stop_total)} |  |  |  |")
     lines.append("")
 
     lines.append("### 2) 減らす候補（停止せず圧縮するもの）")
@@ -532,17 +677,18 @@ def generate_report(year: int, rows: list[dict[str, str]], output_path: Path) ->
     special_records = build_special_records(spend_records)
     monthly_split = build_monthly_spending_split(year, spend_records, special_records)
     special_class_table, special_top_table = render_special_tables(special_records)
-    chart_filename = f"{year}_monthly_stacked_drivers_special.svg"
+    chart_filename = f"{output_path.stem}_monthly_stacked_drivers_special.svg"
     chart_path = output_path.parent / chart_filename
     write_monthly_stacked_svg(monthly_split, chart_path, year)
+    source_names = {row.get("source_name", "") for row in rows}
 
     now_text = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     lines: list[str] = []
     lines.append(f"# 家計レポート {year}")
     lines.append("")
     lines.append(f"- 生成日時(UTC): `{now_text}`")
-    lines.append("- 月次支出入: `hokurikuBank` ベース")
-    lines.append("- 支出ドライバー: `カード支出 + 銀行直接支出(カード引落・家族間振替除外)`")
+    lines.append("- 月次支出入: `source_type=bank` ベース")
+    lines.append("- 支出ドライバー: `source_type=credit_card + 銀行直接支出(カード引落・家族間振替除外)`")
     lines.append("")
     lines.append("## 月次 支出入・支出内訳（統合表）")
     lines.extend(render_monthly_integrated_table(bank_monthly, monthly_split))
@@ -560,7 +706,7 @@ def generate_report(year: int, rows: list[dict[str, str]], output_path: Path) ->
     lines.extend(special_top_table)
     lines.append("")
     lines.append("## 支出改善アクション（優先5項目）")
-    lines.extend(render_improvement_actions(spend_records, driver_totals, special_records))
+    lines.extend(render_improvement_actions(spend_records, driver_totals, special_records, source_names))
     lines.append("")
     return "\n".join(lines), chart_path
 
